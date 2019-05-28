@@ -13,13 +13,24 @@ class Cli
     Child.find_by(last_name: lastname)
   end
 
-  def nav_options
+  def self.nav_options
     puts "1. Create"
     puts "2. Read"
     puts "3. Update"
     puts "4. Delete"
-    puts "Please Type Option 1, 2, 3, or 4."
-    optionchoice = gets.chomp
+    puts "5. Quit"
+    puts "Please Type Option 1, 2, 3, 4, or 5."
+    optionchoice = gets.to_i
+    if optionchoice.between?(1,5)
+      return optionchoice
+    else
+      puts "You have made a titanic error in judgement.  I'm surprised your child can read."
+      puts "Please make a sane selection."
+      self.nav_options
+    end
   end
+
+
+
 
 end
