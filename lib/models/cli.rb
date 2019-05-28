@@ -32,13 +32,15 @@ class Cli
 
   def self.read(lastname)
     child = Child.find_by(last_name: lastname)
-    snackdate = SnackDate.find_by(child_id: child.id)
-    if snackdate
-      snack = Snack.find(snackdate.snack_id)
-      puts "The #{lastname} Family is Schedule to Bring #{snackdate.quantity} #{snack.name}(s) On #{snackdate.date}"
-      puts ""
+    snackdate = SnackDate.where("child_id = #{child.id}")
+    if snackdate.length > 0
+      snackdate.each do |sd|
+        snack = Snack.find(sd.snack_id)
+        puts "The #{lastname} Family is Schedule to Bring #{sd.quantity} #{snack.name}(s) On #{sd.date}"
+        puts ""
+      end
     else
-      puts "You have not Scheduled a Snack Date.  Please consider Option 1."
+      puts "You have not Scheduled a Date to Bring Snacks.  Please Consider Option 1."
     end
   end
 
@@ -68,6 +70,11 @@ class Cli
     quantity = gets.to_i
     SnackDate.create(date: date , quantity: quantity , child_id: child.id, snack_id: snack.id)
     puts "You are scheduled to bring #{quantity} #{snack.name}(s) on #{date}."
+
+  end
+
+  def self.update(lastname)
+    self.read(lastname)
 
   end
 
