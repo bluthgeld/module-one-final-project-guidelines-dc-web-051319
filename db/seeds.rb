@@ -5,3 +5,6 @@ jesse = Child.find_or_create_by(last_name: "Cheseboro" , first_name: "Jesse" , e
 
 apple = Snack.find_or_create_by(name: "Apple")
 pretzel = Snack.find_or_create_by(name: "Pretzel")
+
+date1 = SnackDate.find_or_create_by(date: "June 1, 2019" , quantity: 4 , child_id: elynor.id , snack_id: apple.id)
+date2 = SnackDate.find_or_create_by(date: "June 12, 2019" , quantity: 3 , child_id: jesse.id , snack_id: apple.id)
