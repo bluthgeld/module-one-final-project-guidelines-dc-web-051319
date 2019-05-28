@@ -30,7 +30,10 @@ class Cli
     end
   end
 
-
+  def self.read(lastname)
+    child = Child.find_by(last_name: lastname)
+    SnackDate.find_by(child_id: child.id)
+  end
 
 
 end
