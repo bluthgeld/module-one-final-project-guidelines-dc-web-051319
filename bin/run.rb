@@ -5,19 +5,27 @@ def main
   Cli.welcome
   lastname = Cli.get_lastname
   if Cli.verify_lastname(lastname)
-    selection = Cli.nav_options
 
-    case selection
-    when 1
-      puts "1"
-    when 2
-      p Cli.read(lastname)
-    when 3
-      puts "3"
-    when 4
-      puts "4"
-    when 5
-      puts "5"
+    bool = true
+
+    while bool
+
+      selection = Cli.nav_options
+
+      case selection
+      when 1
+        bool = false
+      when 2
+        p Cli.read(lastname)
+      when 3
+        puts "3"
+      when 4
+        puts "4"
+      when 5
+        Cli.quit
+        bool = false
+      end
+
     end
 
   else

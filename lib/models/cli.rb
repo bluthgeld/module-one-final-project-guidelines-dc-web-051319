@@ -32,8 +32,18 @@ class Cli
 
   def self.read(lastname)
     child = Child.find_by(last_name: lastname)
-    SnackDate.find_by(child_id: child.id)
+    snackdate = SnackDate.find_by(child_id: child.id)
+    if snackdate
+      snack = Snack.find(snackdate.snack_id)
+      puts "The #{lastname} Family is Schedule to Bring #{snackdate.quantity} #{snack.name}(s) On #{snackdate.date}"
+      puts ""
+    else
+      puts "You have not Scheduled a Snack Date.  Please consider Option 1."
+    end
   end
 
+  def self.quit
+    puts "You are leaving the Snack List.  We Hope You Have a Great Day!"
+  end
 
 end
