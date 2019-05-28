@@ -14,9 +14,9 @@ def main
 
       case selection
       when 1
-        bool = false
+        Cli.create 
       when 2
-        p Cli.read(lastname)
+        Cli.read(lastname)
       when 3
         puts "3"
       when 4

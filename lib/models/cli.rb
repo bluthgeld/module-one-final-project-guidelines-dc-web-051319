@@ -46,4 +46,23 @@ class Cli
     puts "You are leaving the Snack List.  We Hope You Have a Great Day!"
   end
 
+
+  def self.create
+    puts "Thank you for scheduling your Snack Day"
+    #snack date and quantity, we have the last_name
+    #choose date
+    puts "Choose an available date to bring a snack"
+    date = gets.chomp
+    if !(SnackDate.find_by(date: date)) == false
+      puts "That day is already taken.  Please choose another day"
+      self.create
+    end
+      puts "Choose the Snack You Will Bring From the List Below:"
+      Snack.all.each do |snack|
+        puts "#{snack.id} - #{snack.name}"
+      end
+      snack = gets.to_i
+    #choose snack
+  end
+
 end
