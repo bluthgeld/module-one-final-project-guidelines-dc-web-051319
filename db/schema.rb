@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 20190528154644) do
 
-  create_table "childs", force: :cascade do |t|
+  create_table "children", force: :cascade do |t|
     t.string "last_name"
     t.string "first_name"
     t.string "email"
