@@ -14,7 +14,7 @@ def main
 
       case selection
       when 1
-        Cli.create 
+        Cli.create(lastname) 
       when 2
         Cli.read(lastname)
       when 3

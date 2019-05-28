@@ -47,7 +47,8 @@ class Cli
   end
 
 
-  def self.create
+  def self.create(lastname)
+    child = Child.find_by(last_name: lastname)
     puts "Thank you for scheduling your Snack Day"
     #snack date and quantity, we have the last_name
     #choose date
@@ -57,12 +58,17 @@ class Cli
       puts "That day is already taken.  Please choose another day"
       self.create
     end
-      puts "Choose the Snack You Will Bring From the List Below:"
-      Snack.all.each do |snack|
-        puts "#{snack.id} - #{snack.name}"
-      end
-      snack = gets.to_i
-    #choose snack
+    puts "Choose the Snack You Will Bring From the List Below:"
+    Snack.all.each do |snack|
+      puts "#{snack.id} - #{snack.name}"
+    end
+    snack_input = gets.to_i
+    snack = Snack.find(snack_input)
+    puts "How many #{snack.name}(s) will you bring?"
+    quantity = gets.to_i
+    SnackDate.create(date: date , quantity: quantity , child_id: child.id, snack_id: snack.id)
+    puts "You are scheduled to bring #{quantity} #{snack.name}(s) on #{date}."
+
   end
 
 end

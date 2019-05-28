@@ -57,3 +57,8 @@ Projects need to be approved prior to launching into them, so take some time to 
 # in config/environment.rb add this line:
 ActiveRecord::Base.logger = nil
 ```
+
+NICK AND ROB'S EXTRA FUN COMMAND LINE SNACK SCHEDULER
+
+TO DO
+Add 'Category' to snacks table.
