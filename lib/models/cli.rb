@@ -14,12 +14,16 @@ class Cli
   end
 
   def self.nav_options
-    puts "1. Create"
-    puts "2. Read"
-    puts "3. Update"
-    puts "4. Delete"
-    puts "5. Quit"
-    puts "Please Type Option 1, 2, 3, 4, or 5."
+    puts "*" * 50
+    puts "*                                                *"
+    puts "*                 1. Create                      *"
+    puts "*                 2. Read                        *"
+    puts "*                 3. Update                      *"
+    puts "*                 4. Delete                      *"
+    puts "*                 5. Quit                        *"
+    puts "*                                                *"
+    puts "*     Please Type Option 1, 2, 3, 4, or 5.       *"
+    puts "*" * 50
     optionchoice = gets.to_i
     if optionchoice.between?(1,5)
       return optionchoice
@@ -91,18 +95,18 @@ class Cli
 
         case update_option
         when 1
-          change_date(snackdate)
+          self.change_date(snackdate)
         when 2
-          puts "2. Change Snack and Quantity"
+          self.change_snack_and_quantity(snackdate)
         when 3
-          puts "3. Change All"
+          new_snackdate = self.change_date(snackdate)
+          self.change_snack_and_quantity(new_snackdate)
         when 4
-          puts "4. Cancel"
+          puts "Returning to the Main Menu"
         else
           puts "You have entered an invalid selection."
           self.update(lastname)
         end
-        self.update(lastname)
     else
       puts "You have entered an invalid date.  Please enter a valid Snack Date."
       self.update(lastname)
@@ -116,10 +120,27 @@ class Cli
       puts "This date is already taken.  Please choose another date."
       change_date(snackdate)
     else
-      SnackDate.update(snackdate.id , date: new_date)
+      new_snackdate = SnackDate.update(snackdate.id , date: new_date)
     end
     puts "Your new Snack Date is #{new_date}."
-    # self.nav_options
+    return new_snackdate
   end
+
+
+  def self.change_snack_and_quantity(snackdate)
+    snack = Snack.find(snackdate.snack_id)
+    puts "You are currently scheduled to bring #{snackdate.quantity} #{snack.name} on #{snackdate.date} "
+    puts "Choose the Snack You Will Bring From the List Below:"
+    Snack.all.each do |snack|
+      puts "#{snack.id} - #{snack.name}"
+    end
+    snack_input = gets.to_i
+    new_snack = Snack.find(snack_input)
+    puts "How many #{new_snack.name}(s) will you bring?"
+    quantity = gets.to_i
+    SnackDate.update(snackdate.id, quantity: quantity , snack_id: new_snack.id)
+    puts "You are scheduled to bring #{quantity} #{new_snack.name}(s) on #{snackdate.date}."
+  end
+
 
 end
