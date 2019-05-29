@@ -70,12 +70,56 @@ class Cli
     quantity = gets.to_i
     SnackDate.create(date: date , quantity: quantity , child_id: child.id, snack_id: snack.id)
     puts "You are scheduled to bring #{quantity} #{snack.name}(s) on #{date}."
-
   end
 
   def self.update(lastname)
     self.read(lastname)
+    #first option
+    puts "Enter the the Snack Date You would Like to Update"
+    date = gets.chomp
 
+    snackdate = SnackDate.find_by(date: date)
+
+    if snackdate
+
+      puts "To Update Your Snack Time, Please Select an Option Below and press Return"
+      puts "1. Change Date"
+      puts "2. Change Snack and Quantity"
+      puts "3. Change Date, Snack, and Quantity"
+      puts "4. Cancel"
+      update_option = gets.to_i
+
+        case update_option
+        when 1
+          change_date(snackdate)
+        when 2
+          puts "2. Change Snack and Quantity"
+        when 3
+          puts "3. Change All"
+        when 4
+          puts "4. Cancel"
+        else
+          puts "You have entered an invalid selection."
+          self.update(lastname)
+        end
+        self.update(lastname)
+    else
+      puts "You have entered an invalid date.  Please enter a valid Snack Date."
+      self.update(lastname)
+    end
+  end
+
+  def self.change_date(snackdate)
+    puts "You are currently scheduled for #{snackdate.date}.  Please select a new date:"
+    new_date = gets.chomp
+    if !(SnackDate.find_by(date: new_date)) == false
+      puts "This date is already taken.  Please choose another date."
+      change_date(snackdate)
+    else
+      SnackDate.update(snackdate.id , date: new_date)
+    end
+    puts "Your new Snack Date is #{new_date}."
+    # self.nav_options
   end
 
 end

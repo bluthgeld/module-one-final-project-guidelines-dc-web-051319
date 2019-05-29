@@ -14,11 +14,11 @@ def main
 
       case selection
       when 1
-        Cli.create(lastname) 
+        Cli.create(lastname)
       when 2
         Cli.read(lastname)
       when 3
-        puts "3"
+        Cli.update(lastname)
       when 4
         puts "4"
       when 5
