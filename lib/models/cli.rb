@@ -1,3 +1,5 @@
+require 'date'
+
 class Cli
 
   def self.welcome
@@ -90,9 +92,14 @@ class Cli
     #choose date
     puts "Choose an available date to bring a snack"
     date = gets.chomp
+    if !(valid_date(date))
+      puts "Invalid Date Format.  Please format YYYY-MM-DD."
+      self.create(child)
+    end
     if !(SnackDate.find_by(date: date)) == false
       puts "That day is already taken.  Please choose another day"
-      self.create
+      date = ""
+      self.create(child)
     end
     puts "Choose the Snack You Will Bring From the List Below:"
     Snack.all.each do |snack|
@@ -195,6 +202,15 @@ class Cli
         puts "You have entered an invalid Snack Date.  Please enter a Valid Snack Date."
         self.delete(child)
       end
+    end
+  end
+
+  def self.valid_date(date)
+    begin
+      Date.parse(date)
+      true
+    rescue ArgumentError
+    false
     end
   end
 

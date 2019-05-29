@@ -1,5 +1,7 @@
 require_relative '../config/environment'
 
+require 'date'
+
 
 def main
   Cli.welcome
