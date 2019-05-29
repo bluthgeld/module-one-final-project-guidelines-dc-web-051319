@@ -52,18 +52,18 @@ class Cli
     if optionchoice.between?(1,5)
       return optionchoice
     else
+      puts ""
       puts "You have made a titanic error in judgement.  I'm surprised your child can read."
       puts "Please make a sane selection."
-      self.nav_options
     end
   end
 
   def self.read(child)
     snackdate = SnackDate.where("child_id = #{child.id}")
     if snackdate.length > 0
-      snackdate.each do |sd|
+      snackdate.each_with_index do |sd , index|
         snack = Snack.find(sd.snack_id)
-        puts "The #{child.last_name.capitalize} Family is Schedule to Bring #{sd.quantity} #{snack.name.capitalize}(s) On #{sd.date}"
+        puts "#{index + 1}. The #{child.last_name.capitalize} Family is Schedule to Bring #{sd.quantity} #{snack.name.capitalize}(s) On #{sd.date}"
         puts ""
       end
       return false
@@ -94,19 +94,19 @@ class Cli
     date = gets.chomp
     if !(valid_date(date))
       puts "Invalid Date Format.  Please format YYYY-MM-DD."
-      self.create(child)
+      return false
     end
     if !(SnackDate.find_by(date: date)) == false
       puts "That day is already taken.  Please choose another day"
       date = ""
-      self.create(child)
+      return false
     end
     puts "Choose the Snack You Will Bring From the List Below:"
-    Snack.all.each do |snack|
-      puts "#{snack.id} - #{snack.name.capitalize}"
+    Snack.all.each_with_index do |snack , index|
+      puts "#{index + 1} - #{snack.name.capitalize}"
     end
     snack_input = gets.to_i
-    snack = Snack.find(snack_input)
+    snack = Snack.all[snack_input - 1]
     puts "How many #{snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
     SnackDate.create(date: date , quantity: quantity , child_id: child.id, snack_id: snack.id)
@@ -116,10 +116,10 @@ class Cli
   def self.update(child)
     self.read(child)
     #first option
-    puts "Enter the the Snack Date You would Like to Update"
-    date = gets.chomp
+    puts "Enter the the Number for the Snack Date You would Like to Update"
+    date = gets.to_i
 
-    snackdate = SnackDate.find_by(date: date)
+    snackdate = SnackDate.where(child_id: child.id)[date - 1]
 
     if snackdate
       puts ""
@@ -158,18 +158,20 @@ class Cli
   end
 
   def self.change_date(snackdate)
-    puts "You are currently scheduled for #{snackdate.date}.  Please select a new date:"
-    new_date = gets.chomp
-    if !(SnackDate.find_by(date: new_date)) == false
-      puts "This date is already taken.  Please choose another date."
-      change_date(snackdate)
-    else
-      new_snackdate = SnackDate.update(snackdate.id , date: new_date)
-    end
-    puts "Your new Snack Date is #{new_date}."
-    return new_snackdate
-  end
-
+     puts "You are currently scheduled for #{snackdate.date}.  Please select a new date:"
+     date_is_invalid = true
+     while date_is_invalid
+       new_date = gets.chomp
+       if !SnackDate.find_by(date: new_date) == false
+         puts "This date is already taken.  Please choose another date."
+       else
+         new_snackdate = SnackDate.update(snackdate.id, date: new_date)
+         date_is_invalid = false
+       end
+     end
+     puts "Your new Snack Date #{new_date}"
+     new_snackdate
+   end
 
   def self.change_snack_and_quantity(snackdate)
     snack = Snack.find(snackdate.snack_id)
@@ -191,8 +193,8 @@ class Cli
 
     else
       puts "Enter the the Snack Date You would Like to Delete.  Type Quit to Return to the Main Menu."
-      date = gets.chomp
-      snackdate = SnackDate.find_by(date: date)
+      date = gets.to_i
+      snackdate = SnackDate.where(child_id: child.id)[date - 1]
       if snackdate
         SnackDate.delete(snackdate.id)
         puts "Your Snack Date has been Deleted.  Returning to the Main Menu."
