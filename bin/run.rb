@@ -22,15 +22,19 @@ def main
       when 4
         Cli.delete(lastname)
       when 5
-        Cli.quit
-        bool = false
+        if Cli.quit
+          bool = false
+        end
       end
 
     end
 
   else
     puts "Your child is not registered for this class.  Please visit the Main Office."
-    main
+    if Cli.quit
+    else
+      main
+    end
   end
 end
 

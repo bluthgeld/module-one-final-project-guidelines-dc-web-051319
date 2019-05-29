@@ -42,7 +42,8 @@ class Cli
     puts "*                 4. Delete                      *"
     puts "*                 5. Quit                        *"
     puts "*                                                *"
-    puts "*     Please Type Option 1, 2, 3, 4, or 5.       *"
+    puts "*          Please Enter 1, 2, 3, 4, or 5.        *"
+    puts "*               and press Return                 *"
     puts "*" * 50
     puts ""
     optionchoice = gets.to_i
@@ -71,7 +72,15 @@ class Cli
   end
 
   def self.quit
-    puts "You are leaving the Snack List.  We Hope You Have a Great Day!"
+    puts "Are you sure you want to leave?"
+    puts "Type Y for Yes or N for No"
+    quit = gets.chomp.downcase
+    if quit == "y"
+      puts "You are leaving the Snack List.  We Hope You Have a Great Day!"
+      return true
+    else
+      return false
+    end
   end
 
 
