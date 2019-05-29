@@ -61,7 +61,7 @@ class Cli
     if snackdate.length > 0
       snackdate.each do |sd|
         snack = Snack.find(sd.snack_id)
-        puts "The #{child.last_name.capitalize} Family is Schedule to Bring #{sd.quantity} #{snack.name}(s) On #{sd.date}"
+        puts "The #{child.last_name.capitalize} Family is Schedule to Bring #{sd.quantity} #{snack.name.capitalize}(s) On #{sd.date}"
         puts ""
       end
       return false
@@ -96,14 +96,14 @@ class Cli
     end
     puts "Choose the Snack You Will Bring From the List Below:"
     Snack.all.each do |snack|
-      puts "#{snack.id} - #{snack.name}"
+      puts "#{snack.id} - #{snack.name.capitalize}"
     end
     snack_input = gets.to_i
     snack = Snack.find(snack_input)
-    puts "How many #{snack.name}(s) will you bring?"
+    puts "How many #{snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
     SnackDate.create(date: date , quantity: quantity , child_id: child.id, snack_id: snack.id)
-    puts "You are scheduled to bring #{quantity} #{snack.name}(s) on #{date}."
+    puts "You are scheduled to bring #{quantity} #{snack.name.capitalize}(s) on #{date}."
   end
 
   def self.update(child)
@@ -166,17 +166,17 @@ class Cli
 
   def self.change_snack_and_quantity(snackdate)
     snack = Snack.find(snackdate.snack_id)
-    puts "You are currently scheduled to bring #{snackdate.quantity} #{snack.name} on #{snackdate.date} "
+    puts "You are currently scheduled to bring #{snackdate.quantity} #{snack.name.capitalize} on #{snackdate.date} "
     puts "Choose the Snack You Will Bring From the List Below:"
     Snack.all.each do |snack|
-      puts "#{snack.id} - #{snack.name}"
+      puts "#{snack.id} - #{snack.name.capitalize}"
     end
     snack_input = gets.to_i
     new_snack = Snack.find(snack_input)
-    puts "How many #{new_snack.name}(s) will you bring?"
+    puts "How many #{new_snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
     SnackDate.update(snackdate.id, quantity: quantity , snack_id: new_snack.id)
-    puts "You are scheduled to bring #{quantity} #{new_snack.name}(s) on #{snackdate.date}."
+    puts "You are scheduled to bring #{quantity} #{new_snack.name.capitalize  }(s) on #{snackdate.date}."
   end
 
   def self.delete(child)
