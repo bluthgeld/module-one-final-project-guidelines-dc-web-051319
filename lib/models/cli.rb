@@ -177,11 +177,11 @@ class Cli
     snack = Snack.find(snackdate.snack_id)
     puts "You are currently scheduled to bring #{snackdate.quantity} #{snack.name.capitalize} on #{snackdate.date} "
     puts "Choose the Snack You Will Bring From the List Below:"
-    Snack.all.each do |snack|
-      puts "#{snack.id} - #{snack.name.capitalize}"
+    Snack.all.each_with_index do |snack , index|
+      puts "#{index + 1} - #{snack.name.capitalize}"
     end
     snack_input = gets.to_i
-    new_snack = Snack.find(snack_input)
+    new_snack = Snack.all[snack_input - 1]
     puts "How many #{new_snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
     SnackDate.update(snackdate.id, quantity: quantity , snack_id: new_snack.id)
