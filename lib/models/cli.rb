@@ -23,7 +23,7 @@ class Cli
 
   def self.get_lastname
     puts "Please enter your child's last name"
-    lastname = gets.chomp
+    gets.chomp.downcase
   end
 
   def self.verify_lastname(lastname)
@@ -56,18 +56,18 @@ class Cli
     end
   end
 
-  def self.read(lastname)
-    child = Child.find_by(last_name: lastname)
+  def self.read(child)
     snackdate = SnackDate.where("child_id = #{child.id}")
     if snackdate.length > 0
       snackdate.each do |sd|
         snack = Snack.find(sd.snack_id)
-        puts "The #{lastname} Family is Schedule to Bring #{sd.quantity} #{snack.name}(s) On #{sd.date}"
+        puts "The #{child.last_name.capitalize} Family is Schedule to Bring #{sd.quantity} #{snack.name}(s) On #{sd.date}"
         puts ""
       end
+      return false
     else
-      puts "You have not Scheduled a Date to Bring Snacks.  Please Consider Option 1."
-      true
+      puts "You have not Scheduled a Date to Bring Snacks.  Please Consider Option 1 from the Main Menu."
+      return true
     end
   end
 
@@ -84,8 +84,7 @@ class Cli
   end
 
 
-  def self.create(lastname)
-    child = Child.find_by(last_name: lastname)
+  def self.create(child)
     puts "Thank you for scheduling your Snack Day"
     #snack date and quantity, we have the last_name
     #choose date
@@ -107,8 +106,8 @@ class Cli
     puts "You are scheduled to bring #{quantity} #{snack.name}(s) on #{date}."
   end
 
-  def self.update(lastname)
-    self.read(lastname)
+  def self.update(child)
+    self.read(child)
     #first option
     puts "Enter the the Snack Date You would Like to Update"
     date = gets.chomp
@@ -143,11 +142,11 @@ class Cli
           puts "Returning to the Main Menu"
         else
           puts "You have entered an invalid selection."
-          self.update(lastname)
+          self.update(child)
         end
     else
       puts "You have entered an invalid date.  Please enter a valid Snack Date."
-      self.update(lastname)
+      self.update(child)
     end
   end
 
@@ -180,8 +179,8 @@ class Cli
     puts "You are scheduled to bring #{quantity} #{new_snack.name}(s) on #{snackdate.date}."
   end
 
-  def self.delete(lastname)
-    if self.read(lastname)
+  def self.delete(child)
+    if self.read(child)
 
     else
       puts "Enter the the Snack Date You would Like to Delete.  Type Quit to Return to the Main Menu."
@@ -194,7 +193,7 @@ class Cli
         puts "Returning to the Main Menu"
       else
         puts "You have entered an invalid Snack Date.  Please enter a Valid Snack Date."
-        self.delete(lastname)
+        self.delete(child)
       end
     end
   end

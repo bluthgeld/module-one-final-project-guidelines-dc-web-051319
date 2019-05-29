@@ -4,7 +4,8 @@ require_relative '../config/environment'
 def main
   Cli.welcome
   lastname = Cli.get_lastname
-  if Cli.verify_lastname(lastname)
+  child = Cli.verify_lastname(lastname)
+  if child
 
     bool = true
 
@@ -14,13 +15,13 @@ def main
 
       case selection
       when 1
-        Cli.create(lastname)
+        Cli.create(child)
       when 2
-        Cli.read(lastname)
+        Cli.read(child)
       when 3
-        Cli.update(lastname)
+        Cli.update(child)
       when 4
-        Cli.delete(lastname)
+        Cli.delete(child)
       when 5
         if Cli.quit
           bool = false
