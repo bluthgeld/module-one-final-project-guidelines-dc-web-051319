@@ -1,7 +1,24 @@
 class Cli
 
   def self.welcome
+    puts ""
+    puts "    ::::::::  ::::    :::     :::      ::::::::  :::    ::: "
+    puts "   :+:    :+: :+:+:   :+:   :+: :+:   :+:    :+: :+:   :+:  "
+    puts "   +:+        :+:+:+  +:+  +:+   +:+  +:+        +:+  +:+   "
+    puts "   +#++:++#++ +#+ +:+ +#+ +#++:++#++: +#+        +#++:++    "
+    puts "          +#+ +#+  +#+#+# +#+     +#+ +#+        +#+  +#+   "
+    puts "   #+#    #+# #+#   #+#+# #+#     #+# #+#    #+# #+#   #+#  "
+    puts "    ########  ###    #### ###     ###  ########  ###    ### "
+    puts "   ::::::::::: ::::::::::: ::::    ::::  :::::::::: "
+    puts "       :+:         :+:     +:+:+: :+:+:+ :+:        "
+    puts "       +:+         +:+     +:+ +:+:+ +:+ +:+        "
+    puts "       +#+         +#+     +#+  +:+  +#+ +#++:++#   "
+    puts "       +#+         +#+     +#+       +#+ +#+        "
+    puts "       #+#         #+#     #+#       #+# #+#        "
+    puts "       ###     ########### ###       ### ########## "
+    puts ""
     puts "Welcome to Ms. Heidi's Snack List."
+    puts ""
   end
 
   def self.get_lastname
@@ -14,7 +31,10 @@ class Cli
   end
 
   def self.nav_options
+    puts ""
     puts "*" * 50
+    puts "*                                                *"
+    puts "*                 MAIN MENU                      *"
     puts "*                                                *"
     puts "*                 1. Create                      *"
     puts "*                 2. Read                        *"
@@ -24,6 +44,7 @@ class Cli
     puts "*                                                *"
     puts "*     Please Type Option 1, 2, 3, 4, or 5.       *"
     puts "*" * 50
+    puts ""
     optionchoice = gets.to_i
     if optionchoice.between?(1,5)
       return optionchoice
@@ -45,6 +66,7 @@ class Cli
       end
     else
       puts "You have not Scheduled a Date to Bring Snacks.  Please Consider Option 1."
+      true
     end
   end
 
@@ -85,12 +107,19 @@ class Cli
     snackdate = SnackDate.find_by(date: date)
 
     if snackdate
-
-      puts "To Update Your Snack Time, Please Select an Option Below and press Return"
-      puts "1. Change Date"
-      puts "2. Change Snack and Quantity"
-      puts "3. Change Date, Snack, and Quantity"
-      puts "4. Cancel"
+      puts ""
+      puts "*" * 50
+      puts "*                                                *"
+      puts "*          To Update Your Snack Time             *"
+      puts "*        Please Select an Option Below           *"
+      puts "*             and press Return                   *"
+      puts "*                                                *"
+      puts "*        1. Change Date                          *"
+      puts "*        2. Change Snack and Quantity            *"
+      puts "*        3. Change Date, Snack, and Quantity     *"
+      puts "*        4. Main Menu                            *"
+      puts "*                                                *"
+      puts "*" * 50
       update_option = gets.to_i
 
         case update_option
@@ -142,5 +171,23 @@ class Cli
     puts "You are scheduled to bring #{quantity} #{new_snack.name}(s) on #{snackdate.date}."
   end
 
+  def self.delete(lastname)
+    if self.read(lastname)
+
+    else
+      puts "Enter the the Snack Date You would Like to Delete.  Type Quit to Return to the Main Menu."
+      date = gets.chomp
+      snackdate = SnackDate.find_by(date: date)
+      if snackdate
+        SnackDate.delete(snackdate.id)
+        puts "Your Snack Date has been Deleted.  Returning to the Main Menu."
+      elsif date.downcase == "quit"
+        puts "Returning to the Main Menu"
+      else
+        puts "You have entered an invalid Snack Date.  Please enter a Valid Snack Date."
+        self.delete(lastname)
+      end
+    end
+  end
 
 end

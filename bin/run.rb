@@ -20,7 +20,7 @@ def main
       when 3
         Cli.update(lastname)
       when 4
-        puts "4"
+        Cli.delete(lastname)
       when 5
         Cli.quit
         bool = false
