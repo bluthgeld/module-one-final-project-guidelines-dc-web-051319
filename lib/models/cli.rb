@@ -26,8 +26,7 @@ STR
 
 
   def self.welcome
-    puts `clear`
-    puts SNACKTIME
+    self.snacktime_header
   end
 
   def self.get_lastname
@@ -68,8 +67,7 @@ STR
   def self.read(child)
     snackdate = SnackDate.where("child_id = #{child.id}")
     if snackdate.length > 0
-      puts `clear`
-      puts SNACKTIME
+      self.snacktime_header
       snackdate.each_with_index do |sd , index|
         snack = Snack.find(sd.snack_id)
         puts ""
@@ -77,8 +75,7 @@ STR
       end
       return false
     else
-      puts `clear`
-      puts SNACKTIME
+      self.snacktime_header
       puts "You have not Scheduled a Date to Bring Snacks.  Please Consider Option 1 from the Main Menu."
       return true
     end
@@ -91,8 +88,7 @@ STR
     puts "Type Y for Yes or N for No"
     quit = gets.chomp.downcase
     if quit == "y"
-      puts `clear`
-      puts SNACKTIME
+      self.snacktime_header
       puts ""
       puts "You are leaving the Snack List.  We Hope You Have a Great Day!"
       puts ""
@@ -105,8 +101,7 @@ STR
 
 
   def self.create(child)
-    puts `clear`
-    puts SNACKTIME
+    self.snacktime_header
     puts ""
     puts "Thank you for scheduling your Snack Day"
     puts ""
@@ -162,8 +157,7 @@ STR
     snackdate = SnackDate.where(child_id: child.id)[date - 1]
 
     if snackdate
-      puts `clear`
-      puts SNACKTIME
+      self.snacktime_header
       puts ""
       puts "       "+"*" * 50
       puts "       *                                                *"
@@ -207,13 +201,19 @@ STR
        if !SnackDate.find_by(date: new_date) == false
          puts "This date is already taken.  Please choose another date."
        else
-         new_snackdate = SnackDate.update(snackdate.id, date: new_date)
-         date_is_invalid = false
+         if self.valid_date(new_date)
+           new_snackdate = SnackDate.update(snackdate.id, date: new_date)
+           date_is_invalid = false
+        else
+          puts "You have entered an invalid date format.  Please enter YYYY-MM-DD"
+        end
        end
      end
+     self.snacktime_header
      puts "Your new Snack Date #{new_date}"
      new_snackdate
    end
+
 
   def self.change_snack_and_quantity(snackdate)
     snack = Snack.find(snackdate.snack_id)
@@ -240,8 +240,7 @@ STR
     puts "How many #{new_snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
     SnackDate.update(snackdate.id, quantity: quantity , snack_id: new_snack.id)
-    puts `clear`
-    puts SNACKTIME
+    self.snacktime_header
     puts ""
     puts "You are scheduled to bring #{quantity} #{new_snack.name.capitalize  }(s) on #{snackdate.date}."
   end
@@ -258,13 +257,11 @@ STR
         snackdate = SnackDate.where(child_id: child.id)[date - 1]
         if date.between?(1 , SnackDate.where(child_id: child.id).length)
           SnackDate.delete(snackdate.id)
-          puts `clear`
-          puts SNACKTIME
+          self.snacktime_header
           puts "Your Snack Date has been Deleted.  Returning to the Main Menu."
           valid_entry = false
         elsif date == 99
-          puts `clear`
-          puts SNACKTIME
+          self.snacktime_header
           puts "Returning to the Main Menu"
           valid_entry = false
         else
@@ -282,6 +279,12 @@ STR
     rescue ArgumentError
     false
     end
+  end
+
+  def self.snacktime_header
+    puts `clear`
+    puts SNACKTIME
+
   end
 
 end

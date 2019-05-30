@@ -14,6 +14,18 @@ otto = Child.find_or_create_by(last_name: "german" , first_name: "otto" , email:
 
 apple = Snack.find_or_create_by(name: "apple")
 pretzel = Snack.find_or_create_by(name: "pretzel")
+orange = Snack.find_or_create_by(name: "orange")
+pineapple = Snack.find_or_create_by(name: "pineapple")
+carrot = Snack.find_or_create_by(name: "carrot stick")
+fruit_roll_up = Snack.find_or_create_by(name: "fruit roll up")
+salami = Snack.find_or_create_by(name: "salami")
+celery = Snack.find_or_create_by(name: "celery stick")
+pear = Snack.find_or_create_by(name: "pear")
+
+
+
+
+
 
 date1 = SnackDate.find_or_create_by(date: "2019-06-01" , quantity: 4 , child_id: elynor.id , snack_id: apple.id)
 date2 = SnackDate.find_or_create_by(date: "2019-07-01" , quantity: 3 , child_id: jesse.id , snack_id: apple.id)
