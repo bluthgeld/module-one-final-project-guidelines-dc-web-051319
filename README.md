@@ -24,7 +24,11 @@ A Snack Date can have one Child​
 
 ​Snack Time requires 'date'
 
-To run the program, open your terminal and the folder location and type 'ruby bin/run.rb'
+To run the program, open your terminal and the folder location and type:
+
+``` ruby
+ruby bin/run.rb
+```
 
 The login screen will open.
 
