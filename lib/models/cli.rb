@@ -108,15 +108,20 @@ STR
     puts "Enter the Date You Wish to Bring a Snack."
     puts "Please use the format YYYY-MM-DD."
     puts ""
-    date = gets.chomp
-    if !(valid_date(date))
-      puts "Invalid Date Format.  Please format YYYY-MM-DD."
-      return false
-    end
-    if !(SnackDate.find_by(date: date)) == false
-      puts "That day is already taken.  Please choose another day"
-      date = ""
-      return false
+    date_is_invalid = true
+    while date_is_invalid
+      date = gets.chomp
+      if !SnackDate.find_by(date: date) == false
+        puts "This date is already taken.  Please choose another date."
+      else
+        if self.valid_date(date)
+          # snackdate = SnackDate.update(snackdate.id, date: date)
+          date_is_invalid = false
+        else
+         puts ""
+         puts "You have entered an invalid date format.  Please enter YYYY-MM-DD"
+        end
+      end
     end
     puts ""
     puts "Choose the Snack You Will Bring From the List Below:"
@@ -194,17 +199,20 @@ STR
   end
 
   def self.change_date(snackdate)
+     puts ""
      puts "You are currently scheduled for #{snackdate.date}.  Please select a new date:"
      date_is_invalid = true
      while date_is_invalid
        new_date = gets.chomp
        if !SnackDate.find_by(date: new_date) == false
+         puts ""
          puts "This date is already taken.  Please choose another date."
        else
          if self.valid_date(new_date)
            new_snackdate = SnackDate.update(snackdate.id, date: new_date)
            date_is_invalid = false
         else
+          puts ""
           puts "You have entered an invalid date format.  Please enter YYYY-MM-DD"
         end
        end
@@ -265,6 +273,7 @@ STR
           puts "Returning to the Main Menu"
           valid_entry = false
         else
+          puts ""
           puts "You have made an invalid selection.  Please enter a number between 1 and #{SnackDate.where(child_id: child.id).length}."
           puts "Or enter 99 to go to the Main Menu."
         end
