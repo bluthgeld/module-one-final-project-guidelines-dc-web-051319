@@ -33,7 +33,9 @@ def main
     end
 
   else
+    puts `clear`
     puts "Your child is not registered for this class.  Please visit the Main Office."
+    puts ""
     if Cli.quit
     else
       main

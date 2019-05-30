@@ -2,29 +2,36 @@ require 'date'
 
 class Cli
 
+  SNACKTIME = <<-STR
+
+
+       ::::::::  ::::    :::     :::      ::::::::  :::    :::
+      :+:    :+: :+:+:   :+:   :+: :+:   :+:    :+: :+:   :+:
+      +:+        :+:+:+  +:+  +:+   +:+  +:+        +:+  +:+
+      +#++:++#++ +#+ +:+ +#+ +#++:++#++: +#+        +#++:++
+             +#+ +#+  +#+#+# +#+     +#+ +#+        +#+  +#+
+      #+#    #+# #+#   #+#+# #+#     #+# #+#    #+# #+#   #+#
+       ########  ###    #### ###     ###  ########  ###    ###
+      ::::::::::: ::::::::::: ::::    ::::  ::::::::::
+          :+:         :+:     +:+:+: :+:+:+ :+:
+          +:+         +:+     +:+ +:+:+ +:+ +:+
+          +#+         +#+     +#+  +:+  +#+ +#++:++#
+          +#+         +#+     +#+       +#+ +#+
+          #+#         #+#     #+#       #+# #+#
+          ###     ########### ###       ### ##########
+
+       *****          Ms. Heidi's Snack List.         *****
+
+STR
+
+
   def self.welcome
-    puts ""
-    puts "    ::::::::  ::::    :::     :::      ::::::::  :::    ::: "
-    puts "   :+:    :+: :+:+:   :+:   :+: :+:   :+:    :+: :+:   :+:  "
-    puts "   +:+        :+:+:+  +:+  +:+   +:+  +:+        +:+  +:+   "
-    puts "   +#++:++#++ +#+ +:+ +#+ +#++:++#++: +#+        +#++:++    "
-    puts "          +#+ +#+  +#+#+# +#+     +#+ +#+        +#+  +#+   "
-    puts "   #+#    #+# #+#   #+#+# #+#     #+# #+#    #+# #+#   #+#  "
-    puts "    ########  ###    #### ###     ###  ########  ###    ### "
-    puts "   ::::::::::: ::::::::::: ::::    ::::  :::::::::: "
-    puts "       :+:         :+:     +:+:+: :+:+:+ :+:        "
-    puts "       +:+         +:+     +:+ +:+:+ +:+ +:+        "
-    puts "       +#+         +#+     +#+  +:+  +#+ +#++:++#   "
-    puts "       +#+         +#+     +#+       +#+ +#+        "
-    puts "       #+#         #+#     #+#       #+# #+#        "
-    puts "       ###     ########### ###       ### ########## "
-    puts ""
-    puts "Welcome to Ms. Heidi's Snack List."
-    puts ""
+    puts `clear`
+    puts SNACKTIME
   end
 
   def self.get_lastname
-    puts "Please enter your child's last name"
+    puts "Please enter your child's last name:"
     gets.chomp.downcase
   end
 
@@ -34,19 +41,19 @@ class Cli
 
   def self.nav_options
     puts ""
-    puts "*" * 50
-    puts "*                                                *"
-    puts "*                 MAIN MENU                      *"
-    puts "*                                                *"
-    puts "*                 1. Create                      *"
-    puts "*                 2. Read                        *"
-    puts "*                 3. Update                      *"
-    puts "*                 4. Delete                      *"
-    puts "*                 5. Quit                        *"
-    puts "*                                                *"
-    puts "*          Please Enter 1, 2, 3, 4, or 5.        *"
-    puts "*               and press Return                 *"
-    puts "*" * 50
+    puts "       "+"*" * 50
+    puts "       *                                                *"
+    puts "       *                 MAIN MENU                      *"
+    puts "       *                                                *"
+    puts "       *                 1. Create                      *"
+    puts "       *                 2. Read                        *"
+    puts "       *                 3. Update                      *"
+    puts "       *                 4. Delete                      *"
+    puts "       *                 5. Quit                        *"
+    puts "       *                                                *"
+    puts "       *          Please Enter 1, 2, 3, 4, or 5.        *"
+    puts "       *               and press Return                 *"
+    puts "       "+"*" * 50
     puts ""
     optionchoice = gets.to_i
     if optionchoice.between?(1,5)
@@ -61,23 +68,30 @@ class Cli
   def self.read(child)
     snackdate = SnackDate.where("child_id = #{child.id}")
     if snackdate.length > 0
+      puts `clear`
+      puts SNACKTIME
       snackdate.each_with_index do |sd , index|
         snack = Snack.find(sd.snack_id)
-        puts "#{index + 1}. The #{child.last_name.capitalize} Family is Schedule to Bring #{sd.quantity} #{snack.name.capitalize}(s) On #{sd.date}"
         puts ""
+        puts "#{index + 1}. The #{child.last_name.capitalize} Family is Schedule to Bring #{sd.quantity} #{snack.name.capitalize}(s) On #{sd.date}"
       end
       return false
     else
+      puts `clear`
+      puts SNACKTIME
       puts "You have not Scheduled a Date to Bring Snacks.  Please Consider Option 1 from the Main Menu."
       return true
     end
   end
 
   def self.quit
-    puts "Are you sure you want to leave?"
+    puts ""
+    puts "Do You Want to Leave Snack List?"
+    puts ""
     puts "Type Y for Yes or N for No"
     quit = gets.chomp.downcase
     if quit == "y"
+      puts ""
       puts "You are leaving the Snack List.  We Hope You Have a Great Day!"
       return true
     else
@@ -87,10 +101,12 @@ class Cli
 
 
   def self.create(child)
+    puts ""
     puts "Thank you for scheduling your Snack Day"
-    #snack date and quantity, we have the last_name
-    #choose date
-    puts "Choose an available date to bring a snack"
+    puts ""
+    puts "Enter the Date You Wish to Bring a Snack."
+    puts "Please use the format YYYY-MM-DD."
+    puts ""
     date = gets.chomp
     if !(valid_date(date))
       puts "Invalid Date Format.  Please format YYYY-MM-DD."
@@ -105,8 +121,18 @@ class Cli
     Snack.all.each_with_index do |snack , index|
       puts "#{index + 1} - #{snack.name.capitalize}"
     end
-    snack_input = gets.to_i
-    snack = Snack.all[snack_input - 1]
+
+    snack_invalid = true
+
+    while snack_invalid
+      snack_input = gets.to_i
+      if snack_input.between?(1,Snack.all.length)
+        snack = Snack.all[snack_input - 1]
+        snack_invalid = false
+      else
+        puts "Please choose a number between 1 and #{Snack.all.length}."
+      end
+    end
     puts "How many #{snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
     SnackDate.create(date: date , quantity: quantity , child_id: child.id, snack_id: snack.id)
