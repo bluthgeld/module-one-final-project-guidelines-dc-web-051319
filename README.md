@@ -46,6 +46,7 @@ A Child's last name is the login credential.  Here is a list of logins you may u
 Made by:
 
 Nicholas Orochena
+
 Robert Pedersen
 
 ## License

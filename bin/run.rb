@@ -33,7 +33,7 @@ def main
     end
 
   else
-    puts `clear`
+    Cli.snacktime_header
     puts "Your child is not registered for this class.  Please visit the Main Office."
     puts ""
     if Cli.quit

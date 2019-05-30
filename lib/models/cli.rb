@@ -58,7 +58,7 @@ STR
     if optionchoice.between?(1,5)
       return optionchoice
     else
-      puts ""
+      self.snacktime_header
       puts "You have made a titanic error in judgement.  I'm surprised your child can read."
       puts "Please make a sane selection."
     end
@@ -95,6 +95,7 @@ STR
       puts ""
       return true
     else
+      self.snacktime_header
       return false
     end
   end
@@ -154,53 +155,66 @@ STR
 
   def self.update(child)
     self.read(child)
-    #first option
-    puts ""
-    puts "Enter the Number for the Snack Date You Would Like to Update"
-    date = gets.to_i
 
-    snackdate = SnackDate.where(child_id: child.id)[date - 1]
+    valid_entry = true
 
-    if snackdate
-      self.snacktime_header
-      puts ""
-      puts "       "+"*" * 50
-      puts "       *                                                *"
-      puts "       *          To Update Your Snack Time             *"
-      puts "       *        Please Select an Option Below           *"
-      puts "       *             and press Return                   *"
-      puts "       *                                                *"
-      puts "       *        1. Change Date                          *"
-      puts "       *        2. Change Snack and Quantity            *"
-      puts "       *        3. Change Date, Snack, and Quantity     *"
-      puts "       *        4. Main Menu                            *"
-      puts "       *                                                *"
-      puts "       "+"*" * 50
-      update_option = gets.to_i
+    while valid_entry
+          puts ""
+          puts "Enter the Number for the Snack Date You Would Like to Update"
+          date = gets.to_i
 
-        case update_option
-        when 1
-          self.change_date(snackdate)
-        when 2
-          self.change_snack_and_quantity(snackdate)
-        when 3
-          new_snackdate = self.change_date(snackdate)
-          self.change_snack_and_quantity(new_snackdate)
-        when 4
-          puts "Returning to the Main Menu"
-        else
-          puts "You have entered an invalid selection."
-          self.update(child)
-        end
-    else
-      puts "You have entered an invalid date.  Please enter a valid Snack Date."
-      self.update(child)
+
+
+          if date.between?(1, SnackDate.where(child_id: child.id).length)
+            snackdate = SnackDate.where(child_id: child.id)[date - 1]
+            self.snacktime_header
+            update_selection = true
+              puts ""
+              puts "       "+"*" * 50
+              puts "       *                                                *"
+              puts "       *          To Update Your Snack Time             *"
+              puts "       *        Please Select an Option Below           *"
+              puts "       *             and press Return                   *"
+              puts "       *                                                *"
+              puts "       *        1. Change Date                          *"
+              puts "       *        2. Change Snack and Quantity            *"
+              puts "       *        3. Change Date, Snack, and Quantity     *"
+              puts "       *        4. Main Menu                            *"
+              puts "       *                                                *"
+              puts "       "+"*" * 50
+              while update_selection
+                update_option = gets.to_i
+                case update_option
+                when 1
+                  self.change_date(snackdate)
+                  return true
+                when 2
+                  self.change_snack_and_quantity(snackdate)
+                  return true
+                when 3
+                  new_snackdate = self.change_date(snackdate)
+                  self.change_snack_and_quantity(new_snackdate)
+                  return true
+                when 4
+                  self.snacktime_header
+                  puts "Returning to the Main Menu"
+                  return true
+                else
+                  puts "You have entered an invalid selection."
+                end
+            end
+          else
+            puts ""
+            puts "You have made an invalid selection.  Please select Snack Date 1 through #{SnackDate.where(child_id: child.id).length}"
+          end
+
     end
+
   end
 
   def self.change_date(snackdate)
      puts ""
-     puts "You are currently scheduled for #{snackdate.date}.  Please select a new date:"
+     puts "You are currently scheduled for #{snackdate.date}.  Please enter a new date.  The Date format is YYYY-MM-DD."
      date_is_invalid = true
      while date_is_invalid
        new_date = gets.chomp
