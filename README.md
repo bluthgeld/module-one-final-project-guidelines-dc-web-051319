@@ -1,7 +1,8 @@
-#SNACK TIME!
-##An interactive Snack scheduler for a school room.
+# SNACK TIME!
 
-##Overview
+## An interactive Snack scheduler for a school room.
+
+## Overview
 
 Based on a real life opportunity​
 
@@ -19,7 +20,7 @@ A Snack Date can have one Snack​
 
 A Snack Date can have one Child​
 
-##Install Instructions
+## Install Instructions
 
 ​Snack Time requires 'date'
 
@@ -36,13 +37,13 @@ A Child's last name is the login credential.  Here is a list of logins you may u
 5. Cheseboro
 
 
-##Contributors
+## Contributors
 
 Made by:
 
 Nicholas Orochena
 Robert Pedersen
 
-##License
+## License
 
 No License Required.
