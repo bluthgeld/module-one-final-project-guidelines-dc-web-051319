@@ -91,8 +91,12 @@ STR
     puts "Type Y for Yes or N for No"
     quit = gets.chomp.downcase
     if quit == "y"
+      puts `clear`
+      puts SNACKTIME
       puts ""
       puts "You are leaving the Snack List.  We Hope You Have a Great Day!"
+      puts ""
+      puts ""
       return true
     else
       return false
@@ -101,6 +105,8 @@ STR
 
 
   def self.create(child)
+    puts `clear`
+    puts SNACKTIME
     puts ""
     puts "Thank you for scheduling your Snack Day"
     puts ""
@@ -117,7 +123,9 @@ STR
       date = ""
       return false
     end
+    puts ""
     puts "Choose the Snack You Will Bring From the List Below:"
+    puts ""
     Snack.all.each_with_index do |snack , index|
       puts "#{index + 1} - #{snack.name.capitalize}"
     end
@@ -130,37 +138,45 @@ STR
         snack = Snack.all[snack_input - 1]
         snack_invalid = false
       else
-        puts "Please choose a number between 1 and #{Snack.all.length}."
+        puts ""
+        puts "Please enter a valid number between 1 and #{Snack.all.length}."
       end
     end
+    puts ""
     puts "How many #{snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
     SnackDate.create(date: date , quantity: quantity , child_id: child.id, snack_id: snack.id)
+    puts `clear`
+    puts SNACKTIME
+    puts ""
     puts "You are scheduled to bring #{quantity} #{snack.name.capitalize}(s) on #{date}."
   end
 
   def self.update(child)
     self.read(child)
     #first option
-    puts "Enter the the Number for the Snack Date You would Like to Update"
+    puts ""
+    puts "Enter the Number for the Snack Date You Would Like to Update"
     date = gets.to_i
 
     snackdate = SnackDate.where(child_id: child.id)[date - 1]
 
     if snackdate
+      puts `clear`
+      puts SNACKTIME
       puts ""
-      puts "*" * 50
-      puts "*                                                *"
-      puts "*          To Update Your Snack Time             *"
-      puts "*        Please Select an Option Below           *"
-      puts "*             and press Return                   *"
-      puts "*                                                *"
-      puts "*        1. Change Date                          *"
-      puts "*        2. Change Snack and Quantity            *"
-      puts "*        3. Change Date, Snack, and Quantity     *"
-      puts "*        4. Main Menu                            *"
-      puts "*                                                *"
-      puts "*" * 50
+      puts "       "+"*" * 50
+      puts "       *                                                *"
+      puts "       *          To Update Your Snack Time             *"
+      puts "       *        Please Select an Option Below           *"
+      puts "       *             and press Return                   *"
+      puts "       *                                                *"
+      puts "       *        1. Change Date                          *"
+      puts "       *        2. Change Snack and Quantity            *"
+      puts "       *        3. Change Date, Snack, and Quantity     *"
+      puts "       *        4. Main Menu                            *"
+      puts "       *                                                *"
+      puts "       "+"*" * 50
       update_option = gets.to_i
 
         case update_option
@@ -202,33 +218,59 @@ STR
   def self.change_snack_and_quantity(snackdate)
     snack = Snack.find(snackdate.snack_id)
     puts "You are currently scheduled to bring #{snackdate.quantity} #{snack.name.capitalize} on #{snackdate.date} "
+    puts ""
     puts "Choose the Snack You Will Bring From the List Below:"
     Snack.all.each_with_index do |snack , index|
       puts "#{index + 1} - #{snack.name.capitalize}"
     end
-    snack_input = gets.to_i
-    new_snack = Snack.all[snack_input - 1]
+
+    snack_invalid = true
+
+    while snack_invalid
+      snack_input = gets.to_i
+      if snack_input.between?(1,Snack.all.length)
+        new_snack = Snack.all[snack_input - 1]
+        snack_invalid = false
+      else
+        puts ""
+        puts "Please enter a valid number between 1 and #{Snack.all.length}."
+      end
+    end
+    puts ""
     puts "How many #{new_snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
     SnackDate.update(snackdate.id, quantity: quantity , snack_id: new_snack.id)
+    puts `clear`
+    puts SNACKTIME
+    puts ""
     puts "You are scheduled to bring #{quantity} #{new_snack.name.capitalize  }(s) on #{snackdate.date}."
   end
 
   def self.delete(child)
     if self.read(child)
-
     else
-      puts "Enter the the Snack Date You would Like to Delete.  Type Quit to Return to the Main Menu."
-      date = gets.to_i
-      snackdate = SnackDate.where(child_id: child.id)[date - 1]
-      if snackdate
-        SnackDate.delete(snackdate.id)
-        puts "Your Snack Date has been Deleted.  Returning to the Main Menu."
-      elsif date.downcase == "quit"
-        puts "Returning to the Main Menu"
-      else
-        puts "You have entered an invalid Snack Date.  Please enter a Valid Snack Date."
-        self.delete(child)
+      puts ""
+      puts "Enter the number of the Snack Date You would Like to Delete.  Enter 99 to Return to the Main Menu."
+
+      valid_entry = true
+      while valid_entry
+        date = gets.to_i
+        snackdate = SnackDate.where(child_id: child.id)[date - 1]
+        if date.between?(1 , SnackDate.where(child_id: child.id).length)
+          SnackDate.delete(snackdate.id)
+          puts `clear`
+          puts SNACKTIME
+          puts "Your Snack Date has been Deleted.  Returning to the Main Menu."
+          valid_entry = false
+        elsif date == 99
+          puts `clear`
+          puts SNACKTIME
+          puts "Returning to the Main Menu"
+          valid_entry = false
+        else
+          puts "You have made an invalid selection.  Please enter a number between 1 and #{SnackDate.where(child_id: child.id).length}."
+          puts "Or enter 99 to go to the Main Menu."
+        end
       end
     end
   end

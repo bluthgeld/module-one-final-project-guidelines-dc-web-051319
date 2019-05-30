@@ -62,3 +62,13 @@ NICK AND ROB'S EXTRA FUN COMMAND LINE SNACK SCHEDULER
 
 TO DO
 Add 'Category' to snacks table.
+
+A Child's last name is the login credential.  Here is a list of logins you may use:
+
+1. Pedersen
+2. Smith
+3. German
+4. Kidd
+5. Cheseboro
+
+Require 'date'
