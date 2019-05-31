@@ -129,7 +129,7 @@ STR
           date_is_invalid = false
         else
          puts ""
-         puts "You have entered an invalid date format.  Please enter YYYY-MM-DD"
+         puts "You have entered an invalid date format, or a date that occurs on a weekend.  Please enter YYYY-MM-DD"
         end
       end
     end
@@ -231,7 +231,7 @@ STR
            date_is_invalid = false
          else
           puts ""
-          puts "You have entered an invalid date format.  Please enter YYYY-MM-DD"
+          puts "You have entered an invalid date format, or a date that occurs on a weekend.  Please enter YYYY-MM-DD"
         end
       end
      end
@@ -297,11 +297,15 @@ STR
     end
   end
 
-  #takes in an argument of a date and 
+  #takes in an argument of a date and
   def self.valid_date(date)
     begin
-      Date.parse(date)
-      true
+      date = Date.parse(date)
+      if date.wday.between?(1,5)
+        true
+      else
+        false
+      end
     rescue ArgumentError
     false
     end
@@ -310,7 +314,6 @@ STR
   def self.snacktime_header
     puts `clear`
     puts SNACKTIME
-
   end
 
   def self.text_mms(child)

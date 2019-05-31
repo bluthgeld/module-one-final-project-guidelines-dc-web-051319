@@ -27,6 +27,6 @@ pear = Snack.find_or_create_by(name: "pear")
 
 
 
-date1 = SnackDate.find_or_create_by(date: "2019-06-01" , quantity: 4 , child_id: elynor.id , snack_id: apple.id)
+date1 = SnackDate.find_or_create_by(date: "2019-06-05" , quantity: 4 , child_id: elynor.id , snack_id: apple.id)
 date2 = SnackDate.find_or_create_by(date: "2019-07-01" , quantity: 3 , child_id: jesse.id , snack_id: apple.id)
 date3 = SnackDate.find_or_create_by(date: "2019-08-01" , quantity: 55 , child_id: elynor.id , snack_id: pretzel.id)
