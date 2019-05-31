@@ -317,11 +317,11 @@ STR
   end
 
   def self.text_mms(child)
-    account_sid = 'ACae6c73de6631acea7a56186f22f3bd3b'
-    auth_token = '2d77857a055eaa2f71978a5e8fbf43ac'
+    account_sid = 'account'
+    auth_token = 'token'
     client = Twilio::REST::Client.new(account_sid, auth_token)
-    from = '+12406410546' # Your Twilio number
-    to = '+12404233542' # Your mobile phone number
+    from = '+15551212' # Your Twilio number
+    to = '+15551212' # Your mobile phone number
 
     date = child.snack_dates.order(:date).first
         client.messages.create(
