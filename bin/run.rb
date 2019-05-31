@@ -25,6 +25,8 @@ def main
       when 4
         Cli.delete(child)
       when 5
+        Cli.text_mms(child)
+      when 6
         if Cli.quit
           bool = false
         end

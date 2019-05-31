@@ -1,4 +1,5 @@
 require 'date'
+require 'twilio-ruby'
 
 class Cli
 
@@ -44,18 +45,19 @@ STR
     puts "       *                                                *"
     puts "       *                 MAIN MENU                      *"
     puts "       *                                                *"
-    puts "       *                 1. Create                      *"
-    puts "       *                 2. Read                        *"
-    puts "       *                 3. Update                      *"
-    puts "       *                 4. Delete                      *"
-    puts "       *                 5. Quit                        *"
+    puts "       *             1. Schedule a Snack Date           *"
+    puts "       *             2. My Snack Dates                  *"
+    puts "       *             3. Modify a Snack Date             *"
+    puts "       *             4. Delete a Snack Date             *"
+    puts "       *             5. Text A Reminder                 *"
+    puts "       *             6. Quit                            *"
     puts "       *                                                *"
     puts "       *          Please Enter 1, 2, 3, 4, or 5.        *"
     puts "       *               and press Return                 *"
     puts "       "+"*" * 50
     puts ""
     optionchoice = gets.to_i
-    if optionchoice.between?(1,5)
+    if optionchoice.between?(1,6)
       return optionchoice
     else
       self.snacktime_header
@@ -308,6 +310,24 @@ STR
     puts `clear`
     puts SNACKTIME
 
+  end
+
+  def self.text_mms(child)
+    account_sid = 'ACae6c73de6631acea7a56186f22f3bd3b'
+    auth_token = '2d77857a055eaa2f71978a5e8fbf43ac'
+    client = Twilio::REST::Client.new(account_sid, auth_token)
+    from = '+12406410546' # Your Twilio number
+    to = '+12404233542' # Your mobile phone number
+
+    date = child.snack_dates.order(:date).first
+        client.messages.create(
+          from: from,
+          to: to,
+          body: "The #{date.child.last_name.capitalize} Family is scheduled to bring #{date.quantity} #{date.snack.name.capitalize}(s) on #{date.date}.  Thank You!"
+          )
+
+      self.snacktime_header
+      puts "Text Message(s) Sent!"
   end
 
 end
