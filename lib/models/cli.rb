@@ -25,20 +25,23 @@ class Cli
 
 STR
 
-
+#Welcome Message
   def self.welcome
     self.snacktime_header
   end
 
+#Gets Name for the Child/Parent
   def self.get_lastname
     puts "Please enter your child's last name:"
     gets.chomp.downcase
   end
 
+#Verifies if the child's last name exists in the list.
   def self.verify_lastname(lastname)
     Child.find_by(last_name: lastname)
   end
 
+#Main Menu Navigation
   def self.nav_options
     puts ""
     puts "       "+"*" * 50
@@ -66,8 +69,10 @@ STR
     end
   end
 
+#Lists all of the Snack Dates associated with the logged in child
+
   def self.read(child)
-    snackdate = SnackDate.where("child_id = #{child.id}")
+    snackdate = child.snack_dates.order(:date)
     if snackdate.length > 0
       self.snacktime_header
       snackdate.each_with_index do |sd , index|
@@ -83,6 +88,7 @@ STR
     end
   end
 
+#quits out of the application
   def self.quit
     puts ""
     puts "Do You Want to Leave Snack List?"
@@ -102,6 +108,7 @@ STR
     end
   end
 
+#creates a new Snack Time, with the argument of child
 
   def self.create(child)
     self.snacktime_header
@@ -155,65 +162,60 @@ STR
     puts "You are scheduled to bring #{quantity} #{snack.name.capitalize}(s) on #{date}."
   end
 
+  #Update Navigation Screen, with argument of child
   def self.update(child)
     self.read(child)
-
-    valid_entry = true
-
-    while valid_entry
+    valid_entry = true #sets a variable to true, for the conditional loop
+    while valid_entry #do this while valid_entry is true
+      puts ""
+      puts "Enter the Number for the Snack Date You Would Like to Update"
+      date = gets.to_i
+      if date.between?(1, SnackDate.where(child_id: child.id).length)
+        snackdate = child.snack_dates.order(:date)[date - 1]
+        self.snacktime_header
+        update_selection = true
           puts ""
-          puts "Enter the Number for the Snack Date You Would Like to Update"
-          date = gets.to_i
-
-
-
-          if date.between?(1, SnackDate.where(child_id: child.id).length)
-            snackdate = SnackDate.where(child_id: child.id)[date - 1]
-            self.snacktime_header
-            update_selection = true
-              puts ""
-              puts "       "+"*" * 50
-              puts "       *                                                *"
-              puts "       *          To Update Your Snack Time             *"
-              puts "       *        Please Select an Option Below           *"
-              puts "       *             and press Return                   *"
-              puts "       *                                                *"
-              puts "       *        1. Change Date                          *"
-              puts "       *        2. Change Snack and Quantity            *"
-              puts "       *        3. Change Date, Snack, and Quantity     *"
-              puts "       *        4. Main Menu                            *"
-              puts "       *                                                *"
-              puts "       "+"*" * 50
-              while update_selection
-                update_option = gets.to_i
-                case update_option
-                when 1
-                  self.change_date(snackdate)
-                  return true
-                when 2
-                  self.change_snack_and_quantity(snackdate)
-                  return true
-                when 3
-                  new_snackdate = self.change_date(snackdate)
-                  self.change_snack_and_quantity(new_snackdate)
-                  return true
-                when 4
-                  self.snacktime_header
-                  puts "Returning to the Main Menu"
-                  return true
-                else
-                  puts "You have entered an invalid selection."
-                end
+          puts "       "+"*" * 50
+          puts "       *                                                *"
+          puts "       *          To Update Your Snack Time             *"
+          puts "       *        Please Select an Option Below           *"
+          puts "       *             and press Return                   *"
+          puts "       *                                                *"
+          puts "       *        1. Change Date                          *"
+          puts "       *        2. Change Snack and Quantity            *"
+          puts "       *        3. Change Date, Snack, and Quantity     *"
+          puts "       *        4. Main Menu                            *"
+          puts "       *                                                *"
+          puts "       "+"*" * 50
+          while update_selection
+            update_option = gets.to_i
+            case update_option
+            when 1
+              self.change_date(snackdate)
+              return true
+            when 2
+              self.change_snack_and_quantity(snackdate)
+              return true
+            when 3
+              new_snackdate = self.change_date(snackdate)
+              self.change_snack_and_quantity(new_snackdate)
+              return true
+            when 4
+              self.snacktime_header
+              puts "Returning to the Main Menu"
+              return true
+            else
+              puts "You have entered an invalid selection."
             end
-          else
-            puts ""
-            puts "You have made an invalid selection.  Please select Snack Date 1 through #{SnackDate.where(child_id: child.id).length}"
-          end
-
+        end
+      else
+        puts ""
+        puts "You have made an invalid selection.  Please select Snack Date 1 through #{SnackDate.where(child_id: child.id).length}"
+      end
     end
-
   end
 
+  #from the update method, to chagne the date of a Snack Date.  Verifies if the new date already exists and if the structure is valid, using self.valid_date with new_snackdate as an argument
   def self.change_date(snackdate)
      puts ""
      puts "You are currently scheduled for #{snackdate.date}.  Please enter a new date.  The Date format is YYYY-MM-DD."
@@ -227,18 +229,18 @@ STR
          if self.valid_date(new_date)
            new_snackdate = SnackDate.update(snackdate.id, date: new_date)
            date_is_invalid = false
-        else
+         else
           puts ""
           puts "You have entered an invalid date format.  Please enter YYYY-MM-DD"
         end
-       end
+      end
      end
      self.snacktime_header
      puts "Your new Snack Date #{new_date}"
      new_snackdate
    end
 
-
+  #from update method, takes in argument of snackdate, and gives user opportunity to change both the snack and the quantity that they will bring
   def self.change_snack_and_quantity(snackdate)
     snack = Snack.find(snackdate.snack_id)
     puts "You are currently scheduled to bring #{snackdate.quantity} #{snack.name.capitalize} on #{snackdate.date} "
@@ -247,14 +249,12 @@ STR
     Snack.all.each_with_index do |snack , index|
       puts "#{index + 1} - #{snack.name.capitalize}"
     end
-
     snack_invalid = true
-
     while snack_invalid
       snack_input = gets.to_i
-      if snack_input.between?(1,Snack.all.length)
-        new_snack = Snack.all[snack_input - 1]
-        snack_invalid = false
+      if snack_input.between?(1,Snack.all.length) #Snack.all.length defines the outside range of possible numbers
+        new_snack = Snack.all[snack_input - 1] #sets to a variable the user's selected Snack object; an array of all Snacks, position in array is input minus 1
+        snack_invalid = false #sets to false to break out of the while loop
       else
         puts ""
         puts "Please enter a valid number between 1 and #{Snack.all.length}."
@@ -263,7 +263,7 @@ STR
     puts ""
     puts "How many #{new_snack.name.capitalize}(s) will you bring?"
     quantity = gets.to_i
-    SnackDate.update(snackdate.id, quantity: quantity , snack_id: new_snack.id)
+    SnackDate.update(snackdate.id, quantity: quantity , snack_id: new_snack.id) #ActiveRecord updates an existing row, by id, and identifies the specific columns to change
     self.snacktime_header
     puts ""
     puts "You are scheduled to bring #{quantity} #{new_snack.name.capitalize  }(s) on #{snackdate.date}."
@@ -278,7 +278,7 @@ STR
       valid_entry = true
       while valid_entry
         date = gets.to_i
-        snackdate = SnackDate.where(child_id: child.id)[date - 1]
+        snackdate = child.snack_dates.order(:date)[date - 1]
         if date.between?(1 , SnackDate.where(child_id: child.id).length)
           SnackDate.delete(snackdate.id)
           self.snacktime_header
@@ -297,6 +297,7 @@ STR
     end
   end
 
+  #takes in an argument of a date and 
   def self.valid_date(date)
     begin
       Date.parse(date)
